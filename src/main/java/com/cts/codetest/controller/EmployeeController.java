@@ -1,5 +1,8 @@
 package com.cts.codetest.controller;
 
+import java.io.StringWriter;
+
+import org.codehaus.plexus.util.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -15,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.cts.codetest.model.Employee;
 import com.cts.codetest.model.Response;
+import com.cts.codetest.service.DBLoggerService;
 import com.cts.codetest.service.EmployeeService;
 import com.cts.codetest.util.Constants;
 
@@ -25,6 +29,10 @@ public class EmployeeController {
 	@Qualifier(value = "employeeService")
 	private EmployeeService employeeService;
 
+	@Autowired
+	@Qualifier(value = "dbLoggerService")
+	private DBLoggerService dbLoggerService;
+	
 	@RequestMapping(value = "/emp", method = RequestMethod.POST, consumes = {
 			MediaType.APPLICATION_XML_VALUE }, produces = { MediaType.APPLICATION_XML_VALUE })
 	@ResponseBody
@@ -41,6 +49,7 @@ public class EmployeeController {
 		response.setResponseCode(Constants.ERROR_CODE_INVALID_XML);
 		response.setResponseMessage(Constants.ERROR_MSG_INVALID_XML);
 
+		dbLoggerService.log(Constants.LOG_TYPE_ERROR, "Request validation", Constants.ERROR_CODE_INVALID_XML + ":" + Constants.ERROR_MSG_INVALID_XML, ExceptionUtils.getFullStackTrace(ex));
 		return response;
 	}
 }

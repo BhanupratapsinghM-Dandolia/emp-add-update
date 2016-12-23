@@ -13,4 +13,6 @@ public class Constants {
 	public static final String ERROR_MSG_NON_EDITABLE = "We cann't update employee information before 24 hours of last update.";
 	public static final String ERROR_MSG_SERVER_ERROR = "Unknow Server Error! If you see this error again please reach out to service provider.";
 	
+	public static final String LOG_TYPE_ERROR = "ERROR";
+	public static final String LOG_TYPE_ACTIVITY = "ACTIVITY";
 }

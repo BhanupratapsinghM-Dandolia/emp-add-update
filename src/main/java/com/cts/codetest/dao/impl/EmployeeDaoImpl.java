@@ -1,15 +1,12 @@
 package com.cts.codetest.dao.impl;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 
-import javax.swing.tree.TreePath;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import com.cts.codetest.dao.EmployeeDao;
@@ -18,6 +15,7 @@ import com.cts.codetest.model.Employee;
 @Repository(value = "employeeDao")
 public class EmployeeDaoImpl implements EmployeeDao {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(EmployeeDaoImpl.class);
 	@Value("${db.emp.upsert.stmt}")
 	private String insertUpdateStmt;
 
@@ -38,6 +36,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
 	@Override
 	public boolean addUpdateEmployeeInformation(Employee employee) {
 
+		LOGGER.debug("Payload" + employee);
 		int updateCount = jdbcTemplate.update(insertUpdateStmt, new Object[] { employee.getEmpNo(),
 				employee.getEmpName(), employee.getJoiningDate(), employee.getDepartment() });
 
