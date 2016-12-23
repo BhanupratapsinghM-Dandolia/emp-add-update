@@ -1,13 +1,22 @@
 package com.cts.codetest.model;
 
+import java.util.Date;
+
 import javax.xml.bind.annotation.XmlRootElement;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 @XmlRootElement(name="employee")
 public class Employee {
 	
 	int empNo;
-	String name;
-	String dept;
+	
+	String empName;
+	
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	Date joiningDate;
+	
+	String department;
 	
 	public int getEmpNo() {
 		return empNo;
@@ -15,23 +24,27 @@ public class Employee {
 	public void setEmpNo(int empNo) {
 		this.empNo = empNo;
 	}
-	public String getName() {
-		return name;
+	public String getEmpName() {
+		return empName;
 	}
-	public void setName(String name) {
-		this.name = name;
+	public void setEmpName(String empName) {
+		this.empName = empName;
 	}
-	public String getDept() {
-		return dept;
+	public Date getJoiningDate() {
+		return joiningDate;
 	}
-	public void setDept(String dept) {
-		this.dept = dept;
+	public void setJoiningDate(Date joiningDate) {
+		this.joiningDate = joiningDate;
+	}
+	public String getDepartment() {
+		return department;
+	}
+	public void setDepartment(String department) {
+		this.department = department;
 	}
 	@Override
 	public String toString() {
-		return "Employee [empNo=" + empNo + ", name=" + name + ", dept=" + dept + "]";
+		return "Employee [empNo=" + empNo + ", empName=" + empName + ", joiningDate=" + joiningDate + ", department="
+				+ department + "]";
 	}
-	
-	
-
 }
