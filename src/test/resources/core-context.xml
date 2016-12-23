@@ -1,0 +1,83 @@
+<beans profile="prod,unit-test" xmlns="http://www.springframework.org/schema/beans"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:util="http://www.springframework.org/schema/util" xmlns:task="http://www.springframework.org/schema/task"
+
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+    http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+    http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+    http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd
+    http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+	<!-- Root Context: defines shared resources visible to all other web components -->
+
+	<aop:aspectj-autoproxy />
+
+	<context:component-scan base-package="com.cts" />
+
+	<mvc:default-servlet-handler />
+	<!-- Handles HTTP GET requests for /resources/** by efficiently serving 
+		up static resources in the ${webappRoot}/resources directory -->
+	<mvc:resources mapping="/resources/**" location="/resources/" />
+
+
+	<mvc:annotation-driven
+		content-negotiation-manager="contentNegotiationManager">
+		<mvc:message-converters register-defaults="true">
+			<ref bean="marshallingConverter" />
+			<ref bean="jsonConverter" />
+		</mvc:message-converters>
+	</mvc:annotation-driven>
+
+	<mvc:default-servlet-handler />
+
+	<bean id="messageSource"
+		class="org.springframework.context.support.ResourceBundleMessageSource">
+		<property name="basename" value="messages" />
+		<property name="useCodeAsDefaultMessage" value="true" />
+	</bean>
+
+	<bean id="marshallingConverter"
+		class="org.springframework.http.converter.xml.MarshallingHttpMessageConverter">
+		<constructor-arg ref="jaxb2Marshaller" />
+		<property name="supportedMediaTypes" value="application/xml" />
+	</bean>
+
+	<bean id="jsonConverter"
+		class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+		<property name="supportedMediaTypes" value="application/json" />
+		<!-- property name="serializationInclusion" value="NON_NULL"/ -->
+	</bean>
+
+	<bean id="contentNegotiationManager"
+		class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
+		<property name="defaultContentType" value="application/json" />
+	</bean>
+
+	<bean id="jaxb2Marshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
+		<property name="schema" value="classpath:/validate.xsd" />
+		<property name="classesToBeBound">
+			<list>
+				<value>com.cts.codetest.model.Employee</value>
+			</list>
+		</property>
+	</bean>
+	<context:property-placeholder location="classpath*:application.properties" />
+
+	<bean
+		class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerExceptionResolver">
+		<property name="messageConverters">
+			<list>
+				<ref bean="marshallingHttpMessageConverter" />
+				<bean
+					class="org.springframework.http.converter.StringHttpMessageConverter" />
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="marshallingHttpMessageConverter" class="org.springframework.http.converter.xml.MarshallingHttpMessageConverter" >
+	<property name="marshaller" ref="jaxb2Marshaller"></property>
+	<property name="unmarshaller" ref="jaxb2Marshaller"></property>
+	</bean>
+</beans>

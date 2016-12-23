@@ -5,6 +5,7 @@ import java.io.StringWriter;
 import org.codehaus.plexus.util.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.cts.codetest.model.Employee;
 import com.cts.codetest.model.Response;
@@ -22,7 +24,7 @@ import com.cts.codetest.service.DBLoggerService;
 import com.cts.codetest.service.EmployeeService;
 import com.cts.codetest.util.Constants;
 
-@Controller
+@RestController
 public class EmployeeController {
 
 	@Autowired
@@ -33,16 +35,14 @@ public class EmployeeController {
 	@Qualifier(value = "dbLoggerService")
 	private DBLoggerService dbLoggerService;
 	
-	@RequestMapping(value = "/emp", method = RequestMethod.POST, consumes = {
-			MediaType.APPLICATION_XML_VALUE }, produces = { MediaType.APPLICATION_XML_VALUE })
-	@ResponseBody
-	public Response addUpdateEmpInfo(@RequestBody Employee employee) {
+	@RequestMapping(value = "/emp", method = RequestMethod.POST,
+			consumes = { MediaType.APPLICATION_XML_VALUE }, produces = { MediaType.APPLICATION_XML_VALUE })
+	public Response addUpdateEmpInfo(@RequestBody Employee employee ) {
 		return employeeService.insertUpdateEmployee(employee);
 	}
 
 	@ExceptionHandler(HttpMessageNotReadableException.class)
 	@ResponseStatus(value = HttpStatus.BAD_REQUEST)
-	@ResponseBody
 	Response handleXMLException(HttpMessageNotReadableException ex) {
 		
 		Response response = new Response();

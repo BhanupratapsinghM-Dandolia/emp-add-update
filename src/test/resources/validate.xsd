@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+<xs:element name="employee">
+  <xs:complexType>
+    <xs:sequence>
+      <xs:element name="empNo" type="xs:int"/>
+      <xs:element name="empName" type="xs:string"/>
+      <xs:element name="joiningDate" type="xs:string"/>
+      <xs:element name="department">
+	      <xs:simpleType>
+		    <xs:restriction base="xs:string">
+		      <xs:enumeration value="IT"/>
+		      <xs:enumeration value="HR"/>
+		      <xs:enumeration value="FIN"/>
+		      <xs:enumeration value="OP"/>
+		    </xs:restriction>
+		  </xs:simpleType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:element>
+</xs:schema>
