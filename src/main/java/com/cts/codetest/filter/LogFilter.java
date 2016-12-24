@@ -20,14 +20,23 @@ public class LogFilter extends OncePerRequestFilter {
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
 			throws ServletException, IOException {
         Long startTime = System.nanoTime();
-        HttpServletResponseWrapper wrapper = new HttpServletResponseWrapper(response);
-        wrapper.addHeader("X-Start-Time", startTime.toString());
+        HttpServletResponseWrapper wrapper = new MyResponse(response);
         chain.doFilter(request, wrapper);
         Long timeTaken = (System.nanoTime()-startTime)/1000000L;
-        wrapper.addHeader("X-Time-Taken-String", startTime.toString());
-        wrapper.addIntHeader("X-Time-Taken-Int", startTime.intValue());
-        wrapper.addHeader("X-Time-Taken", String.valueOf(timeTaken));
+        wrapper.setHeader("X-Time-Taken", String.valueOf(timeTaken));
         LOGGER.debug("Time Taken: {}", startTime);
         LOGGER.debug("Time Taken Header: {}", wrapper.getHeader("X-Time-Taken"));
     }
+}
+
+class MyResponse extends HttpServletResponseWrapper {
+
+	public MyResponse(HttpServletResponse response) {
+		super(response);
+	}
+	
+	@Override
+	public void addHeader(String name, String value) {
+		super.addHeader(name, value);
+	}
 }
