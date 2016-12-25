@@ -1,8 +1,11 @@
 package com.cts.codetest.model;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlAdapter;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -14,9 +17,9 @@ public class Employee {
 	String empName;
 	
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	Date joiningDate;
+	private Date joiningDate;
 	
-	String department;
+	private  String department;
 	
 	public int getEmpNo() {
 		return empNo;
@@ -30,6 +33,8 @@ public class Employee {
 	public void setEmpName(String empName) {
 		this.empName = empName;
 	}
+	
+	@XmlJavaTypeAdapter(DateFormatterAdapter.class)
 	public Date getJoiningDate() {
 		return joiningDate;
 	}
@@ -47,4 +52,18 @@ public class Employee {
 		return "Employee [empNo=" + empNo + ", empName=" + empName + ", joiningDate=" + joiningDate + ", department="
 				+ department + "]";
 	}
+	
+	private static class DateFormatterAdapter extends XmlAdapter<String, Date> {
+        private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+        @Override
+        public Date unmarshal(final String v) throws Exception {
+            return dateFormat.parse(v);
+        }
+
+        @Override
+        public String marshal(final Date v) throws Exception {
+            return dateFormat.format(v);
+        }
+    }
 }

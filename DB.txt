@@ -1,0 +1,29 @@
+create table `sakila`.employee (
+EMP_NO NUMERIC(10,0) primary key,
+EMP_NAME varchar(100),
+EMP_JOIN_DATE DATE,
+EMP_DEPT VARCHAR(10),
+CRT_DATE_ DATE,
+MOD_DATE DATE
+);
+
+create table `sakila`.APP_LOG (
+LOG_TYPE varchar(100),
+ACTIVITY varchar(100),
+LOG_TS datetime,
+LOG_MESSAGE VARCHAR(400),
+STACK_TRACE VARCHAR(20000)
+);
+
+insert into `sakila`.APP_LOG (LOG_TYPE,ACTIVITY,LOG_TS,LOG_MESSAGE,STACK_TRACE) values 
+('Asdf','Bsdf',sysdate(),'Csdf','Dsdf'); 
+
+
+INSERT INTO `sakila`.employee values 
+(7,'Bhanu Pratap Singh',(now() - interval 100 day),'IT',now(),now()) 
+ON DUPLICATE KEY UPDATE EMP_NAME = values (EMP_NAME), EMP_DEPT = values (EMP_DEPT),  MOD_DATE = now() - interval 5 day;
+
+select * from `sakila`.APP_LOG;
+
+select * from `sakila`.employee;
+
