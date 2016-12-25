@@ -20,7 +20,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.cts.codetest.client.Client;
 import com.cts.codetest.model.Employee;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.module.mockmvc.RestAssuredMockMvc;
@@ -66,10 +65,4 @@ public class TestController {
 			.statusCode(200);
 
 	}
-	
-	@Test
-	public void TestClient(){
-		Client.main(null);
-	}
-
 }

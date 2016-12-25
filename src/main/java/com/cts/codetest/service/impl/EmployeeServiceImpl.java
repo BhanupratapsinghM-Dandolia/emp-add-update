@@ -5,55 +5,47 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.cts.codetest.dao.EmployeeDao;
+import com.cts.codetest.exception.InternalServerException;
 import com.cts.codetest.model.Employee;
 import com.cts.codetest.model.Response;
 import com.cts.codetest.service.DBLoggerService;
 import com.cts.codetest.service.EmployeeService;
 import static com.cts.codetest.util.Constants.*;
 
-@Service(value="employeeService")
+@Service(value = "employeeService")
 public class EmployeeServiceImpl implements EmployeeService {
 
 	@Autowired
-	@Qualifier(value="employeeDao")
+	@Qualifier(value = "employeeDao")
 	private EmployeeDao employeedao;
-	
+
 	@Autowired
-	@Qualifier(value="dbLoggerService")
+	@Qualifier(value = "dbLoggerService")
 	private DBLoggerService dbLoggerService;
-	
-	
+
 	@Override
 	public Response insertUpdateEmployee(Employee employee) {
 		Response response = new Response();
-		
-		try{
-		if(employeedao.isEmployeeInformationEditableOrInsertable(employee)){
-			
-			if(employeedao.addUpdateEmployeeInformation(employee)){				
 
-				response.setResponseCode(SUCCESS_CODE);
-				response.setResponseMessage(SUCCESS_MESSAGE);
+			if (employeedao.isEmployeeInformationEditableOrInsertable(employee)) {
+
+				if (employeedao.addUpdateEmployeeInformation(employee)) {
+
+					response.setResponseCode(SUCCESS_CODE);
+					response.setResponseMessage(SUCCESS_MESSAGE);
+			
 				} else {
 
-					response.setResponseCode(ERROR_CODE_SERVER_ERROR);
-					response.setResponseMessage(ERROR_MSG_SERVER_ERROR);
+					throw new InternalServerException(ERROR_CODE_SERVER_ERROR, ERROR_MSG_SERVER_ERROR);
+				}
+				
+			} else {
+
+				dbLoggerService.log(LOG_TYPE_ERROR, "Updating Employee Infomation",
+						ERROR_CODE_NON_EDITABLE + ":" + ERROR_MSG_NON_EDITABLE, employee.toString());
+
+				throw new InternalServerException(ERROR_CODE_NON_EDITABLE, ERROR_MSG_NON_EDITABLE);
 			}
-		}
-		else{
-			
-			response.setResponseCode(ERROR_CODE_NON_EDITABLE);
-			response.setResponseMessage(ERROR_MSG_NON_EDITABLE);
-			
-			dbLoggerService.log(LOG_TYPE_ERROR, "Updating Employee Infomation", ERROR_CODE_NON_EDITABLE+ ":" + ERROR_MSG_NON_EDITABLE , employee.toString());
-			
-		}
-		} catch(Exception exp){
-			exp.printStackTrace();
-			response.setResponseCode(ERROR_CODE_SERVER_ERROR);
-			response.setResponseMessage(ERROR_MSG_SERVER_ERROR);			
-		}
-		
 		return response;
 	}
 }

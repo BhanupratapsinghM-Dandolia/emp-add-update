@@ -6,7 +6,7 @@
     <xs:all>
       <xs:element name="empNo" type="xs:int"/>
       <xs:element name="empName" type="xs:string"/>
-      <xs:element name="joiningDate" type="xs:string"/>
+      <xs:element name="joiningDate" type="xs:date"/>
       <xs:element name="department">
 	      <xs:simpleType>
 		    <xs:restriction base="xs:string">
